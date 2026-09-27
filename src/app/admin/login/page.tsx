@@ -16,11 +16,7 @@ function AdminLoginForm() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleAutoFill = () => {
-    setEmail('admin@warkop.com');
-    setPassword('adminwarkop123');
-    toast.success('Kredensial admin berhasil diisi otomatis!');
-  };
+  const handleAutoFill = () => {};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,7 +89,7 @@ function AdminLoginForm() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@warkop.com"
+                  placeholder="masukan email"
                   className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#FAF8F5] border border-[#E7E0D8] text-xs font-medium text-[#1C1917] focus:outline-none focus:border-stone-900"
                 />
               </div>
@@ -106,7 +102,7 @@ function AdminLoginForm() {
               <div className="relative">
                 <Lock className="w-4 h-4 text-[#A8A29E] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
-                  type="password"
+                  type="masukan password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -131,25 +127,6 @@ function AdminLoginForm() {
               )}
             </button>
           </form>
-
-          {/* Info Akun Default & Auto Fill Button */}
-          <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200 space-y-2 text-xs">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-[#18120F]">Akun Admin Default:</span>
-              <button
-                type="button"
-                onClick={handleAutoFill}
-                className="px-2.5 py-1 rounded bg-white border border-stone-300 text-stone-800 hover:bg-stone-100 text-[11px] font-semibold flex items-center gap-1 transition-all active:scale-95 shadow-xs"
-              >
-                <Sparkles className="w-3 h-3 text-stone-600" />
-                <span>Isi Otomatis</span>
-              </button>
-            </div>
-            <div className="space-y-0.5 text-[11px] text-[#5C4F47]">
-              <p>Email: <code className="text-stone-900 font-bold font-mono">admin@warkop.com</code></p>
-              <p>Password: <code className="text-stone-900 font-bold font-mono">adminwarkop123</code></p>
-            </div>
-          </div>
         </div>
       </div>
     </div>
