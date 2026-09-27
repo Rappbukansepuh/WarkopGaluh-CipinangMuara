@@ -96,7 +96,7 @@ export default function Footer() {
             <Link href="/status" className="hover:text-stone-900 transition-colors">Cek Status</Link>
             <Link href="/tentang" className="hover:text-stone-900 transition-colors">Tentang</Link>
             <Link href="/lokasi" className="hover:text-stone-900 transition-colors">Lokasi & Peta</Link>
-            <Link href="/admin/login" className="hover:text-stone-900 transition-colors text-stone-400">Admin</Link>
+            {/*  */}
           </div>
         </div>
       </div>
