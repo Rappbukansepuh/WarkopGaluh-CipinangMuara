@@ -14,6 +14,7 @@ export interface IPesananDocument extends Document {
   menu: IPesananItemDoc[];
   totalHarga: number;
   catatan?: string;
+  metodePembayaran?: 'QRIS' | 'Tunai';
   status: StatusPesanan;
   createdAt: Date;
   updatedAt: Date;
@@ -72,6 +73,11 @@ const PesananSchema = new Schema<IPesananDocument>(
       type: String,
       default: 'tidak ada catatan',
       trim: true,
+    },
+    metodePembayaran: {
+      type: String,
+      enum: ['QRIS', 'Tunai'],
+      default: 'QRIS',
     },
     status: {
       type: String,

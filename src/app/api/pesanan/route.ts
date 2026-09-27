@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { nama, noHP, menu, catatan, totalHarga } = body;
+    const { nama, noHP, menu, catatan, totalHarga, metodePembayaran } = body;
 
     if (!nama || !noHP || !menu || !Array.isArray(menu) || menu.length === 0) {
       return NextResponse.json(
@@ -77,6 +77,7 @@ export async function POST(request: NextRequest) {
     const sanitizedNama = sanitizeString(nama);
     const sanitizedNoHP = sanitizeString(noHP);
     const sanitizedCatatan = sanitizeString(catatan || '');
+    const validMetode = metodePembayaran === 'Tunai' ? 'Tunai' : 'QRIS';
 
     if (!sanitizedNama || sanitizedNama.length < 2) {
       return NextResponse.json(
@@ -113,6 +114,7 @@ export async function POST(request: NextRequest) {
       menu: sanitizedMenu,
       totalHarga: totalHarga ? Number(totalHarga) : calculatedTotal,
       catatan: sanitizedCatatan,
+      metodePembayaran: validMetode as 'QRIS' | 'Tunai',
       status: 'pending' as const,
       createdAt: new Date(),
     };

@@ -62,3 +62,25 @@ h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar-thumb:hover {
   background: #B8A998;
 }
+
+/* Print Receipt Styles */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #struk-print-area,
+  #struk-print-area * {
+    visibility: visible;
+  }
+  #struk-print-area {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    max-width: 320px !important;
+    margin: 0 auto;
+    padding: 12px !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}

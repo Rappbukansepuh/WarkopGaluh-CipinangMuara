@@ -20,6 +20,8 @@ export interface IOrderItem {
   jumlah: number;
 }
 
+export type MetodePembayaran = 'QRIS' | 'Tunai';
+
 export interface IPesanan {
   _id?: string;
   nama: string;
@@ -27,6 +29,7 @@ export interface IPesanan {
   menu: IOrderItem[];
   totalHarga: number;
   catatan?: string;
+  metodePembayaran?: MetodePembayaran;
   status: StatusPesanan;
   createdAt?: string | Date;
 }

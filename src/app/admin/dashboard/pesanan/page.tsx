@@ -11,10 +11,14 @@ import {
   Download,
   ChevronLeft,
   ChevronRight,
+  Printer,
+  CreditCard,
+  Banknote,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { IPesanan, StatusPesanan } from '@/types';
 import { exportPesananToCsv } from '@/lib/exportCsv';
+import StrukModal from '@/components/StrukModal';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -23,6 +27,7 @@ export default function AdminPesananPage() {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('semua');
   const [search, setSearch] = useState('');
+  const [selectedStrukPesanan, setSelectedStrukPesanan] = useState<IPesanan | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [exporting, setExporting] = useState(false);
@@ -345,6 +350,23 @@ export default function AdminPesananPage() {
                       </span>
                     </div>
 
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-[11px] text-[#78716C]">Metode Bayar:</span>
+                      <span className="inline-flex items-center gap-1 font-bold text-[11px] text-stone-900">
+                        {pesanan.metodePembayaran === 'Tunai' ? (
+                          <>
+                            <Banknote className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>Tunai</span>
+                          </>
+                        ) : (
+                          <>
+                            <CreditCard className="w-3.5 h-3.5 text-blue-600" />
+                            <span>QRIS</span>
+                          </>
+                        )}
+                      </span>
+                    </div>
+
                     <div>
                       <label className="block text-[10px] uppercase font-bold text-[#78716C] mb-1">
                         Status:
@@ -366,11 +388,20 @@ export default function AdminPesananPage() {
                     </div>
 
                     <div className="flex items-center gap-1.5 pt-1">
+                      <button
+                        onClick={() => setSelectedStrukPesanan(pesanan)}
+                        className="py-1.5 px-2.5 rounded-md bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold flex items-center justify-center gap-1 transition-colors"
+                        title="Cetak Struk Nota"
+                      >
+                        <Printer className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Struk</span>
+                      </button>
+
                       <a
                         href={generateWhatsAppChatUrl(pesanan)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 py-1.5 px-2.5 rounded-md bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold flex items-center justify-center gap-1 transition-colors"
+                        className="flex-1 py-1.5 px-2 rounded-md bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold flex items-center justify-center gap-1 transition-colors text-center"
                         title="WhatsApp Pemesan"
                       >
                         <MessageCircle className="w-3.5 h-3.5" />
@@ -474,6 +505,15 @@ export default function AdminPesananPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Struk Modal */}
+      {selectedStrukPesanan && (
+        <StrukModal
+          isOpen={!!selectedStrukPesanan}
+          onClose={() => setSelectedStrukPesanan(null)}
+          pesanan={selectedStrukPesanan}
+        />
       )}
     </div>
   );

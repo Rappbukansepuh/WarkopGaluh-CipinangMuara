@@ -13,8 +13,11 @@ import {
   ChevronRight,
   ReceiptText,
   CircleDot,
+  Printer,
+  Receipt,
 } from 'lucide-react';
 import Link from 'next/link';
+import StrukModal from '@/components/StrukModal';
 
 type StatusPesanan = 'pending' | 'diproses' | 'selesai' | 'dibatalkan';
 
@@ -119,6 +122,7 @@ function StatusStepBar({ status }: { status: StatusPesanan }) {
 }
 
 function PesananCard({ pesanan }: { pesanan: IPesanan }) {
+  const [showStruk, setShowStruk] = useState(false);
   const cfg = STATUS_CONFIG[pesanan.status] ?? STATUS_CONFIG.pending;
   const orderId = pesanan._id?.slice(-6).toUpperCase();
 
@@ -185,17 +189,39 @@ function PesananCard({ pesanan }: { pesanan: IPesanan }) {
           )}
         </div>
 
-        {/* Footer: total + time */}
-        <div className="flex items-center justify-between pt-1 border-t border-stone-100">
-          <div className="flex items-center gap-1.5 text-[11px] text-stone-400">
-            <Clock className="w-3 h-3" />
-            <span>{formatDate(pesanan.createdAt as string)}</span>
+        {/* Footer: total + time + Tombol Cetak Struk */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-2 border-t border-stone-100">
+          <div className="flex items-center justify-between sm:justify-start gap-3">
+            <div className="flex items-center gap-1.5 text-[11px] text-stone-400">
+              <Clock className="w-3 h-3" />
+              <span>{formatDate(pesanan.createdAt as string)}</span>
+            </div>
+            <span className="text-sm font-extrabold text-stone-900 font-mono sm:hidden">
+              {formatRupiah(pesanan.totalHarga)}
+            </span>
           </div>
-          <span className="text-sm font-extrabold text-stone-900 font-mono">
-            {formatRupiah(pesanan.totalHarga)}
-          </span>
+
+          <div className="flex items-center justify-between sm:justify-end gap-3">
+            <span className="text-sm font-extrabold text-stone-900 font-mono hidden sm:inline">
+              {formatRupiah(pesanan.totalHarga)}
+            </span>
+            <button
+              onClick={() => setShowStruk(true)}
+              className="px-3 py-1.5 rounded-lg bg-stone-900 hover:bg-stone-800 text-white font-semibold text-xs inline-flex items-center gap-1.5 transition-colors shadow-xs"
+            >
+              <Printer className="w-3.5 h-3.5 text-amber-400" />
+              <span>Cetak Struk</span>
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Struk Modal */}
+      <StrukModal
+        isOpen={showStruk}
+        onClose={() => setShowStruk(false)}
+        pesanan={pesanan}
+      />
     </div>
   );
 }

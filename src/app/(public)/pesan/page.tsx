@@ -7,10 +7,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { toast } from 'sonner';
 import Image from 'next/image';
-import { ShoppingBag, Plus, Trash2, CheckCircle2, User, MessageSquare, Send, Maximize2, QrCode } from 'lucide-react';
+import { ShoppingBag, Plus, Trash2, CheckCircle2, User, MessageSquare, Send, Maximize2, QrCode, Receipt, CreditCard, Banknote, Printer } from 'lucide-react';
 import { MENU_DATA } from '@/data/menu';
 import { IMenuItem } from '@/types';
 import QrisModal from '@/components/public/QrisModal';
+import StrukModal from '@/components/StrukModal';
 
 // Zod Schema
 const pesananSchema = z.object({
@@ -29,6 +30,7 @@ const pesananSchema = z.object({
       })
     )
     .min(1, { message: 'Pilih minimal 1 menu' }),
+  metodePembayaran: z.enum(['QRIS', 'Tunai']).default('QRIS'),
   catatan: z.string().optional(),
 });
 
@@ -41,6 +43,7 @@ function PesanFormContent() {
   const [availableMenus, setAvailableMenus] = useState<IMenuItem[]>(MENU_DATA);
   const [orderSuccess, setOrderSuccess] = useState<any>(null);
   const [showQrisModal, setShowQrisModal] = useState(false);
+  const [showStrukModal, setShowStrukModal] = useState(false);
 
   useEffect(() => {
     fetch('/api/menu')
@@ -66,6 +69,7 @@ function PesanFormContent() {
     defaultValues: {
       nama: '',
       noHP: '',
+      metodePembayaran: 'QRIS',
       menu: [
         {
           nama: '',
@@ -148,6 +152,7 @@ function PesanFormContent() {
       const payload = {
         nama: data.nama,
         noHP: data.noHP,
+        metodePembayaran: data.metodePembayaran || 'QRIS',
         menu: data.menu.map((item) => ({
           menuId: item.menuId || undefined,
           nama: item.nama,
@@ -171,6 +176,9 @@ function PesanFormContent() {
         setOrderSuccess({
           ...payload,
           orderId,
+          _id: resData.data?._id,
+          createdAt: resData.data?.createdAt || new Date().toISOString(),
+          status: resData.data?.status || 'pending',
         });
         toast.success('Pesanan berhasil dibuat!');
         reset();
@@ -304,7 +312,17 @@ function PesanFormContent() {
             orderId={orderSuccess.orderId}
           />
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+          {/* Action Buttons: Struk, WhatsApp, Order Baru */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+            <button
+              type="button"
+              onClick={() => setShowStrukModal(true)}
+              className="px-4 py-2.5 rounded-lg bg-stone-900 hover:bg-stone-800 text-white font-semibold text-xs flex items-center justify-center gap-2 transition-colors shadow-xs"
+            >
+              <Printer className="w-3.5 h-3.5 text-amber-400" />
+              <span>Lihat & Cetak Struk</span>
+            </button>
+
             <a
               href={generateWhatsAppUrl(orderSuccess)}
               target="_blank"
@@ -314,14 +332,23 @@ function PesanFormContent() {
               <Send className="w-3.5 h-3.5" />
               <span>Kirim Konfirmasi WhatsApp</span>
             </a>
+          </div>
 
+          <div className="pt-1">
             <button
               onClick={() => setOrderSuccess(null)}
-              className="px-4 py-2.5 rounded-lg bg-white hover:bg-stone-100 text-stone-700 font-semibold text-xs border border-stone-300 transition-colors"
+              className="w-full px-4 py-2.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold text-xs border border-stone-200 transition-colors text-center"
             >
-              Buat Pesanan Baru
+              + Buat Pesanan Baru
             </button>
           </div>
+
+          {/* Struk Modal */}
+          <StrukModal
+            isOpen={showStrukModal}
+            onClose={() => setShowStrukModal(false)}
+            pesanan={orderSuccess}
+          />
         </div>
       ) : (
         /* Order Form */
@@ -478,7 +505,69 @@ function PesanFormContent() {
             </div>
           </div>
 
-          {/* Section 3: Notes */}
+          {/* Section 3: Payment Method */}
+          <div className="space-y-2 pt-4 border-t border-stone-200">
+            <label className="block text-xs font-semibold text-stone-700 flex items-center gap-1.5">
+              <CreditCard className="w-3.5 h-3.5 text-stone-600" />
+              <span>Pilihan Metode Pembayaran</span>
+            </label>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <label
+                className={`p-3 rounded-xl border flex items-center gap-3 cursor-pointer transition-all ${
+                  watch('metodePembayaran') === 'QRIS'
+                    ? 'border-stone-900 bg-stone-900/5 ring-1 ring-stone-900'
+                    : 'border-stone-200 bg-stone-50 hover:bg-white'
+                }`}
+              >
+                <input
+                  type="radio"
+                  value="QRIS"
+                  {...register('metodePembayaran')}
+                  className="sr-only"
+                />
+                <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+                  <CreditCard className="w-4 h-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs font-bold text-stone-900 block">
+                    QRIS (Non-Tunai)
+                  </span>
+                  <span className="text-[10px] text-stone-500 block truncate">
+                    BCA, Mandiri, GoPay, OVO, DANA
+                  </span>
+                </div>
+              </label>
+
+              <label
+                className={`p-3 rounded-xl border flex items-center gap-3 cursor-pointer transition-all ${
+                  watch('metodePembayaran') === 'Tunai'
+                    ? 'border-stone-900 bg-stone-900/5 ring-1 ring-stone-900'
+                    : 'border-stone-200 bg-stone-50 hover:bg-white'
+                }`}
+              >
+                <input
+                  type="radio"
+                  value="Tunai"
+                  {...register('metodePembayaran')}
+                  className="sr-only"
+                />
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                  <Banknote className="w-4 h-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs font-bold text-stone-900 block">
+                    Bayar Tunai di Kasir
+                  </span>
+                  <span className="text-[10px] text-stone-500 block truncate">
+                    Bayar langsung saat pesanan siap
+                  </span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          {/* Section 4: Notes */}
           <div className="space-y-1.5 pt-4 border-t border-stone-200">
             <label className="block text-xs font-semibold text-stone-700 flex items-center gap-1.5">
               <MessageSquare className="w-3.5 h-3.5 text-stone-600" />
@@ -492,7 +581,7 @@ function PesanFormContent() {
             />
           </div>
 
-          {/* Section 4: Total & Submit */}
+          {/* Section 5: Total & Submit */}
           <div className="pt-4 border-t border-stone-200 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div>
               <span className="text-xs text-stone-500 block">Total Pembayaran</span>
