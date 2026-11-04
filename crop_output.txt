@@ -1,0 +1,2 @@
+Error: Command failed: python crop_icon.py > crop_output.txt 2>&1
+Error: Command failed: py crop_icon.py > crop_output.txt 2>&1

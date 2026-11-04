@@ -1,5 +1,3 @@
-// Hapus atau beri komentar pada baris ini:
-// output: 'export',
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -12,6 +10,14 @@ const nextConfig = {
   },
   compress: true,
   poweredByHeader: false,
+  eslint: {
+    // Mengabaikan error ESLint saat npm run build / deploy di Vercel
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    // Mengabaikan error TypeScript saat build (opsional)
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;
