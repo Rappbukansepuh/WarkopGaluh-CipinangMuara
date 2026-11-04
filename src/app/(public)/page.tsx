@@ -62,7 +62,7 @@ export default function HomePage() {
                 Kopi seduh pas, Indomie hangat, dan tempat santai sampai larut.
               </h1>
               <p className="text-stone-600 text-sm sm:text-base leading-relaxed max-w-xl">
-                Warung kopi sederhana di Cipinang Muara. Tempat rehat sejenak, ngobrol santai, atau nugas dengan WiFi dan colokan listrik di setiap meja.
+                Warung kopi di Cipinang Muara buat rehat sejenak, ngobrol bareng teman, atau nugas santai dengan WiFi dan colokan di tiap meja.
               </p>
             </div>
 
@@ -70,7 +70,7 @@ export default function HomePage() {
             <div className="flex flex-wrap items-center gap-3 pt-1">
               <Link
                 href="/menu"
-                className="px-5 py-2.5 rounded-lg bg-stone-900 hover:bg-stone-800 text-white text-xs sm:text-sm font-semibold transition-colors shadow-xs inline-flex items-center gap-2"
+                className="px-5 py-2.5 rounded-lg bg-stone-900/80 hover:bg-stone-800/90 backdrop-blur-sm text-white text-xs sm:text-sm font-semibold transition-colors shadow-xs inline-flex items-center gap-2"
               >
                 <Coffee className="w-4 h-4" />
                 <span>Lihat Daftar Menu</span>
@@ -78,7 +78,7 @@ export default function HomePage() {
 
               <Link
                 href="/pesan"
-                className="px-5 py-2.5 rounded-lg bg-white hover:bg-stone-100 text-stone-900 text-xs sm:text-sm font-semibold border border-stone-300 transition-colors inline-flex items-center gap-2"
+                className="px-5 py-2.5 rounded-lg bg-white/80 hover:bg-stone-100/90 backdrop-blur-sm text-stone-900 text-xs sm:text-sm font-semibold border border-stone-300 transition-colors inline-flex items-center gap-2"
               >
                 <ShoppingBag className="w-4 h-4 text-stone-700" />
                 <span>Pesan Sekarang</span>
@@ -173,7 +173,7 @@ export default function HomePage() {
               </div>
               <div>
                 <p className="font-bold text-stone-900 text-sm">Fasilitas</p>
-                <p className="text-stone-500 mt-0.5">WiFi Kencang & Colokan</p>
+                <p className="text-stone-500 mt-0.5">WiFi & Colokan Meja</p>
                 <p className="text-stone-400 text-[11px]">Parkir motor tersedia</p>
               </div>
             </div>
@@ -185,7 +185,7 @@ export default function HomePage() {
               <div>
                 <p className="font-bold text-stone-900 text-sm">Pembayaran</p>
                 <p className="text-stone-500 mt-0.5">Tunai & QRIS</p>
-                <p className="text-stone-400 text-[11px]">BCA, GoPay, OVO, DANA</p>
+                <p className="text-stone-400 text-[11px]">M-Banking & semua E-Wallet</p>
               </div>
             </div>
 
@@ -198,13 +198,13 @@ export default function HomePage() {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
             <span className="text-[11px] font-mono tracking-wider uppercase text-stone-500 block mb-1">
-              Daftar Santapan
+              Menu Warkop
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
-              Menu Pilihan Warkop Galuh
+              Pilihan Menu Warkop Galuh
             </h2>
             <p className="text-stone-500 text-xs sm:text-sm mt-1">
-              Seduhan kopi hangat, Indomie racikan mantap, dan minuman dingin pelepas dahaga.
+              Kopi seduh, Indomie kuah atau goreng, dan aneka minuman sachet dingin.
             </p>
           </div>
 
@@ -249,26 +249,26 @@ export default function HomePage() {
             
             <div className="lg:col-span-7 space-y-4">
               <span className="text-[11px] font-mono tracking-wider uppercase text-stone-500 block">
-                Suasana & Pelayanan
+                Suasana Warkop
               </span>
               <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
-                Tempat nongkrong yang ramah, santai, dan nyaman di kantong.
+                Tempat santai warga Cipinang Muara.
               </h2>
               <p className="text-stone-600 text-xs sm:text-sm leading-relaxed">
-                Warkop Galuh didirikan sebagai ruang temu warga, teman kerja, dan mahasiswa sekitar Cipinang Muara. Tanpa formalitas yang kaku, kami sediakan tempat istirahat dengan minuman racikan pas, santapan hangat yang selalu siap disajikan, dan akses listrik untuk cas gadget.
+                Warkop Galuh buka buat siapa saja yang butuh tempat istirahat, ngobrol bareng teman, atau nugas santai. Suasananya sederhana, colokan tersedia di tiap meja, dan harga pas di kantong.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 text-xs">
                 <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200/80 space-y-1">
-                  <h3 className="font-bold text-stone-900">Racikan Pas & Higienis</h3>
+                  <h3 className="font-bold text-stone-900">Seduhan Fresh & Bersih</h3>
                   <p className="text-stone-500 leading-relaxed">
-                    Air seduhan selalu mendidih, takaran kopi dan susu seimbang sesuai selera Anda.
+                    Air seduhan selalu panas mendidih, takaran gula atau susu bisa request sesuai selera.
                   </p>
                 </div>
                 <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200/80 space-y-1">
-                  <h3 className="font-bold text-stone-900">Nongkrong Tanpa Ribet</h3>
+                  <h3 className="font-bold text-stone-900">Duduk Santai Bebas Pilih</h3>
                   <p className="text-stone-500 leading-relaxed">
-                    Bebas pilih duduk di meja dalam atau area luar, santai sambil ngobrol atau kerja ringan.
+                    Tersedia meja dalam dan area luar, bebas mau ngobrol santai atau sambil buka laptop.
                   </p>
                 </div>
               </div>
@@ -278,7 +278,7 @@ export default function HomePage() {
               <div className="flex items-center justify-between border-b border-stone-200 pb-3">
                 <span className="font-bold text-xs text-stone-900">Ringkasan Info Warkop</span>
                 <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                  Aktif
+                  Buka Hari Ini
                 </span>
               </div>
 
@@ -288,12 +288,12 @@ export default function HomePage() {
                   <span className="font-semibold text-stone-800">Rp 2.000 – Rp 13.000</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-stone-100">
-                  <span className="text-stone-400">Waktu Pelayanan</span>
+                  <span className="text-stone-400">Jam Buka</span>
                   <span className="font-semibold text-stone-800">09.00 – 00.00 WIB</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-stone-100">
-                  <span className="text-stone-400">Pesanan Online</span>
-                  <span className="font-semibold text-stone-800">Web & WhatsApp</span>
+                  <span className="text-stone-400">Pemesanan</span>
+                  <span className="font-semibold text-stone-800">Langsung di Web / Kasir / WA</span>
                 </div>
                 <div className="flex justify-between py-1">
                   <span className="text-stone-400">Metode Bayar</span>
@@ -326,10 +326,10 @@ export default function HomePage() {
                 Metode Pembayaran
               </span>
               <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
-                Mendukung Pembayaran QRIS & Tunai
+                Bisa Bayar Tunai atau QRIS
               </h2>
               <p className="text-stone-600 text-xs sm:text-sm leading-relaxed max-w-xl">
-                Nongkrong tanpa khawatir tidak bawa uang pas. Cukup scan barcode QRIS kami menggunakan aplikasi mobile banking (BCA, Mandiri, BRI, BNI) atau dompet digital (GoPay, OVO, DANA, ShopeePay).
+                Nggak perlu repot bawa uang pas. Kasir menerima pembayaran tunai dan scan QRIS lewat aplikasi m-banking atau e-wallet apa saja.
               </p>
 
               <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-stone-600">

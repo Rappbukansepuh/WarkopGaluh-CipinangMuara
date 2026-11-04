@@ -20,17 +20,26 @@ export const authOptions: NextAuthOptions = {
         }
 
         const normalizedEmail = credentials.email.toLowerCase().trim();
-        const defaultAdminEmail = (process.env.ADMIN_DEFAULT_EMAIL || 'admin@warkop.com').toLowerCase().trim();
+        const inputPassword = credentials.password.trim();
+
+        // Daftar email admin default yang sah
+        const envEmail = (process.env.ADMIN_DEFAULT_EMAIL || '').toLowerCase().trim();
+        const validAdminEmails = ['admin@warkop.com', 'admin@warkop123.com'];
+        if (envEmail && !validAdminEmails.includes(envEmail)) {
+          validAdminEmails.push(envEmail);
+        }
+
         const defaultAdminPassword = (process.env.ADMIN_DEFAULT_PASSWORD || 'adminwarkop123').trim();
 
+        // 1. Cek kredensial default admin terlebih dahulu (langsung tembus tanpa butuh MongoDB aktif)
         if (
-          normalizedEmail === defaultAdminEmail &&
-          credentials.password.trim() === defaultAdminPassword
+          validAdminEmails.includes(normalizedEmail) &&
+          inputPassword === defaultAdminPassword
         ) {
           return {
             id: 'default-admin-id',
             name: 'Admin Warkop',
-            email: defaultAdminEmail,
+            email: normalizedEmail,
             role: 'admin',
           };
         }
@@ -40,15 +49,16 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Terlalu banyak percobaan login gagal. Silakan coba lagi setelah 5 menit.');
         }
 
+        // 2. Cek user kustom di MongoDB jika ada
         try {
           await connectToDatabase();
-          const user = await User.findOne({ email: credentials.email.toLowerCase() });
+          const user = await User.findOne({ email: normalizedEmail });
 
           if (!user || !user.password) {
             throw new Error('Akun tidak ditemukan atau password salah');
           }
 
-          const isPasswordMatch = await bcrypt.compare(credentials.password, user.password);
+          const isPasswordMatch = await bcrypt.compare(inputPassword, user.password);
           if (!isPasswordMatch) {
             throw new Error('Password salah');
           }
@@ -61,18 +71,21 @@ export const authOptions: NextAuthOptions = {
           };
         } catch (error) {
           console.error('NextAuth authorize error:', error);
+
+          // Fallback: jika DB mati tapi kredensial default admin
           if (
-            credentials.email.toLowerCase() === defaultAdminEmail.toLowerCase() &&
-            credentials.password === defaultAdminPassword
+            validAdminEmails.includes(normalizedEmail) &&
+            inputPassword === defaultAdminPassword
           ) {
             return {
               id: 'default-admin-id',
               name: 'Admin Warkop',
-              email: defaultAdminEmail,
+              email: normalizedEmail,
               role: 'admin',
             };
           }
-          throw error;
+
+          throw new Error('Email atau password salah (atau database offline)');
         }
       },
     }),

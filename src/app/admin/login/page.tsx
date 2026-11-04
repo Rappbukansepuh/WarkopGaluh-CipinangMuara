@@ -4,7 +4,7 @@ import React, { useState, Suspense } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Coffee, Lock, Mail, ArrowLeft, Loader2, Sparkles, Check } from 'lucide-react';
+import { Coffee, Lock, Mail, ArrowLeft, Loader2, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 
 function AdminLoginForm() {
@@ -16,7 +16,11 @@ function AdminLoginForm() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleAutoFill = () => {};
+  const handleAutoFill = () => {
+    setEmail('admin@warkop.com');
+    setPassword('adminwarkop123');
+    toast.info('Akun admin default telah diisi otomatis');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +42,6 @@ function AdminLoginForm() {
         toast.error(res.error || 'Email atau password salah');
       } else if (res?.ok) {
         toast.success('Login berhasil! Mengalihkan ke dashboard...');
-        // Use window.location for clean full-page transition with updated cookie
         window.location.href = callbackUrl;
       }
     } catch (err) {
@@ -76,6 +79,22 @@ function AdminLoginForm() {
             </p>
           </div>
 
+          {/* Quick Autofill Helper */}
+          <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs flex items-center justify-between">
+            <div>
+              <p className="font-semibold text-stone-800 text-[11px]">Akun Default Warkop:</p>
+              <p className="text-stone-500 text-[10px] font-mono">admin@warkop.com / adminwarkop123</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleAutoFill}
+              className="px-2.5 py-1.5 rounded-lg bg-white border border-stone-300 hover:border-stone-400 text-stone-800 text-[11px] font-semibold flex items-center gap-1 shadow-2xs transition-colors"
+            >
+              <Sparkles className="w-3 h-3 text-amber-500" />
+              <span>Isi Otomatis</span>
+            </button>
+          </div>
+
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1">
@@ -89,7 +108,7 @@ function AdminLoginForm() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="masukan email"
+                  placeholder="admin@warkop.com"
                   className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#FAF8F5] border border-[#E7E0D8] text-xs font-medium text-[#1C1917] focus:outline-none focus:border-stone-900"
                 />
               </div>
@@ -102,7 +121,7 @@ function AdminLoginForm() {
               <div className="relative">
                 <Lock className="w-4 h-4 text-[#A8A29E] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
-                  type="masukan password"
+                  type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

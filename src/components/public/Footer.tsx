@@ -19,7 +19,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-stone-500 text-xs leading-relaxed max-w-sm">
-              Warung kopi santai di Cipinang Muara. Menyajikan seduhan kopi racikan pas, Indomie hangat, dan aneka minuman segar untuk melepas penat sehari-hari.
+              Warung kopi di Cipinang Muara. Menyediakan kopi seduh, Indomie kuah atau goreng, dan aneka minuman sachet dingin.
             </p>
           </div>
 
@@ -33,7 +33,7 @@ export default function Footer() {
               Buka setiap hari: <strong className="text-stone-900 font-semibold">09.00 – 00.00 WIB</strong>
             </p>
             <p className="text-stone-400 text-[11px]">
-              Tersedia area duduk santai, colokan listrik, dan parkir motor.
+              Tersedia area duduk, colokan listrik di tiap meja, dan parkir motor.
             </p>
           </div>
 
@@ -96,7 +96,6 @@ export default function Footer() {
             <Link href="/status" className="hover:text-stone-900 transition-colors">Cek Status</Link>
             <Link href="/tentang" className="hover:text-stone-900 transition-colors">Tentang</Link>
             <Link href="/lokasi" className="hover:text-stone-900 transition-colors">Lokasi & Peta</Link>
-            {/*  */}
           </div>
         </div>
       </div>

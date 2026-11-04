@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import {
   Printer,
   Copy,
@@ -149,8 +150,8 @@ export default function StrukModal({ isOpen, onClose, pesanan }: StrukModalProps
           >
             {/* Header Nota */}
             <div className="text-center space-y-1 pb-3 border-b border-dashed border-stone-300">
-              <div className="w-10 h-10 mx-auto rounded-full bg-stone-900 text-amber-400 flex items-center justify-center mb-1">
-                <Coffee className="w-5 h-5" />
+              <div className="w-20 h-20 mx-auto rounded-full overflow-hidden mb-1">
+                <Image src="/images/logo.png" alt="Warkop Galuh" width={80} height={80} className="w-full h-full object-cover" />
               </div>
               <h2 className="text-base font-bold tracking-tight text-stone-900 uppercase">
                 WARKOP GALUH

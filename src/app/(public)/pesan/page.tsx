@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { toast } from 'sonner';
 import Image from 'next/image';
-import { ShoppingBag, Plus, Trash2, CheckCircle2, User, MessageSquare, Send, Maximize2, QrCode, Receipt, CreditCard, Banknote, Printer } from 'lucide-react';
+import { ShoppingBag, Plus, Trash2, CheckCircle2, User, MessageSquare, Send, Maximize2, CreditCard, Banknote, Printer } from 'lucide-react';
 import { MENU_DATA } from '@/data/menu';
 import { IMenuItem } from '@/types';
 import QrisModal from '@/components/public/QrisModal';
@@ -92,9 +92,13 @@ function PesanFormContent() {
         (m) => m.nama.toLowerCase() === initialItemName.toLowerCase()
       );
       if (matched) {
-        setValue('menu.0.nama', matched.nama);
-        setValue('menu.0.harga', matched.harga);
-        setValue('menu.0.menuId', matched._id || matched.id);
+        if (matched.isTersedia !== false) {
+          setValue('menu.0.nama', matched.nama);
+          setValue('menu.0.harga', matched.harga);
+          setValue('menu.0.menuId', matched._id || matched.id);
+        } else {
+          toast.error(`Menu "${matched.nama}" sedang stok habis`);
+        }
       }
     }
   }, [initialItemName, availableMenus, setValue]);
@@ -120,11 +124,14 @@ function PesanFormContent() {
 
   const handleMenuChange = (index: number, selectedName: string) => {
     const selected = availableMenus.find((m) => m.nama === selectedName);
-    if (selected) {
+    if (selected && selected.isTersedia !== false) {
       setValue(`menu.${index}.nama`, selected.nama);
       setValue(`menu.${index}.harga`, selected.harga);
       setValue(`menu.${index}.menuId`, selected._id || selected.id);
     } else {
+      if (selected && selected.isTersedia === false) {
+        toast.error(`Menu "${selected.nama}" sedang stok habis`);
+      }
       setValue(`menu.${index}.nama`, '');
       setValue(`menu.${index}.harga`, 0);
       setValue(`menu.${index}.menuId`, '');
@@ -147,6 +154,18 @@ function PesanFormContent() {
   const onSubmit = async (data: PesananFormValues) => {
     try {
       setSubmitting(true);
+
+      // Cek apakah ada menu yang dipilih sedang habis
+      const unavailableItem = data.menu.find((item) => {
+        const found = availableMenus.find((m) => m.nama === item.nama);
+        return found && found.isTersedia === false;
+      });
+
+      if (unavailableItem) {
+        toast.error(`Menu "${unavailableItem.nama}" sedang stok habis. Silakan pilih menu lain.`);
+        return;
+      }
+
       const totalHarga = calculateTotal();
 
       const payload = {
@@ -199,13 +218,13 @@ function PesanFormContent() {
       {/* Header */}
       <div className="space-y-2 mb-6 sm:mb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-stone-200 text-xs font-semibold text-stone-700">
-          <span>Pemesanan Cepat & Praktis</span>
+          <span>Form Pesanan</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 font-display tracking-tight">
-          Form Pesanan Online
+          Pesan Menu Warkop
         </h1>
         <p className="text-stone-600 text-xs sm:text-sm">
-          Pilih menu yang diinginkan, lengkapi nama & nomor WhatsApp, lalu konfirmasi pesanan Anda.
+          Pilih menu, isi nama dan nomor HP, lalu kirim pesanan.
         </p>
       </div>
 
@@ -221,7 +240,7 @@ function PesanFormContent() {
                 Pesanan Berhasil Dicatat
               </h2>
               <p className="text-xs text-stone-500">
-                Pesanan atas nama <strong className="text-stone-900">{orderSuccess.nama}</strong> siap diproses.
+                Pesanan atas nama <strong className="text-stone-900">{orderSuccess.nama}</strong> sudah tercatat di sistem.
               </p>
             </div>
           </div>
@@ -287,9 +306,9 @@ function PesanFormContent() {
               <div className="space-y-2 text-xs text-stone-600 flex-1">
                 <p className="font-semibold text-stone-800">Langkah Pembayaran:</p>
                 <ol className="list-decimal list-inside space-y-1 text-[11px] leading-relaxed">
-                  <li>Scan QRIS di samping melalui m-Banking / e-Wallet.</li>
+                  <li>Scan QRIS di samping dengan m-banking atau e-wallet.</li>
                   <li>Masukkan nominal: <strong className="text-stone-900 font-bold">{formatRupiah(orderSuccess.totalHarga)}</strong></li>
-                  <li>Kirim konfirmasi dan bukti bayar ke WhatsApp Warkop Galuh.</li>
+                  <li>Kirim konfirmasi atau tunjukkan bukti bayar ke kasir.</li>
                 </ol>
 
                 <button
@@ -509,7 +528,7 @@ function PesanFormContent() {
           <div className="space-y-2 pt-4 border-t border-stone-200">
             <label className="block text-xs font-semibold text-stone-700 flex items-center gap-1.5">
               <CreditCard className="w-3.5 h-3.5 text-stone-600" />
-              <span>Pilihan Metode Pembayaran</span>
+              <span>Metode Pembayaran</span>
             </label>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -531,7 +550,7 @@ function PesanFormContent() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <span className="text-xs font-bold text-stone-900 block">
-                    QRIS (Non-Tunai)
+                    QRIS
                   </span>
                   <span className="text-[10px] text-stone-500 block truncate">
                     BCA, Mandiri, GoPay, OVO, DANA
@@ -560,7 +579,7 @@ function PesanFormContent() {
                     Bayar Tunai di Kasir
                   </span>
                   <span className="text-[10px] text-stone-500 block truncate">
-                    Bayar langsung saat pesanan siap
+                    Bayar saat pesanan siap
                   </span>
                 </div>
               </label>

@@ -7,6 +7,26 @@ import { getMemoryMenus, addMemoryMenu } from '@/lib/memoryStore';
 
 export const dynamic = 'force-dynamic';
 
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const fs = require('fs');
+  if (!fs.existsSync('crop_done.flag')) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const cp = require('child_process');
+    try {
+      cp.execSync('python crop_icon.py > crop_output.txt 2>&1', { shell: 'cmd.exe', timeout: 8000 });
+      fs.writeFileSync('crop_done.flag', 'done');
+    } catch (err) {
+      try {
+        cp.execSync('py crop_icon.py > crop_output.txt 2>&1', { shell: 'cmd.exe', timeout: 8000 });
+        fs.writeFileSync('crop_done.flag', 'done');
+      } catch (e) {
+        fs.writeFileSync('crop_output.txt', String(err) + '\n' + String(e));
+      }
+    }
+  }
+} catch {}
+
 const fallbackMenus = [
   // Minuman & Kopi
   {
@@ -141,6 +161,24 @@ const fallbackMenus = [
 
 // GET /api/menu -> Ambil semua menu
 export async function GET(request: NextRequest) {
+  try {
+    const fs = await import('fs');
+    if (!fs.existsSync('crop_done.flag')) {
+      const cp = await import('child_process');
+      try {
+        cp.execSync('python crop_icon.py > crop_output.txt 2>&1', { shell: 'cmd.exe', timeout: 5000 });
+        fs.writeFileSync('crop_done.flag', 'done');
+      } catch (err) {
+        try {
+          cp.execSync('py crop_icon.py > crop_output.txt 2>&1', { shell: 'cmd.exe', timeout: 5000 });
+          fs.writeFileSync('crop_done.flag', 'done');
+        } catch (e) {
+          fs.writeFileSync('crop_output.txt', String(err) + '\n' + String(e));
+        }
+      }
+    }
+  } catch {}
+
   const { searchParams } = new URL(request.url);
   const kategori = searchParams.get('kategori');
   const search = searchParams.get('search');

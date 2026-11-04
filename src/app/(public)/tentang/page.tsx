@@ -16,41 +16,41 @@ import {
 const MILESTONES = [
   {
     year: '2018',
-    title: 'Awal Mula',
-    desc: 'Warkop Galuh berdiri dari keinginan sederhana: menyediakan tempat nyaman untuk warga Cipinang Muara berkumpul, ngobrol, dan ngopi tanpa harus jauh-jauh.',
+    title: 'Mulai Buka',
+    desc: 'Buka di Cipinang Muara 2 untuk tempat ngopi dan kumpul warga sekitar.',
   },
   {
     year: '2020',
-    title: 'Berkembang',
-    desc: 'Di masa pandemi, kami mulai melayani pesanan bungkus dan delivery kecil-kecilan. Dukungan pelanggan setia membuat kami terus bertahan.',
+    title: 'Layanan Pesan Bungkus',
+    desc: 'Mulai melayani pesanan takeaway dan bungkus untuk pelanggan sekitar.',
   },
   {
     year: '2023',
-    title: 'Upgrade Fasilitas',
-    desc: 'Penambahan WiFi kencang, colokan listrik di setiap meja, dan area parkir motor membuat warkop makin ramai didatangi pelajar dan pekerja muda.',
+    title: 'WiFi & Colokan Meja',
+    desc: 'Menambah WiFi dan colokan listrik di tiap meja agar nyaman buat nugas atau buka laptop.',
   },
   {
     year: '2024',
-    title: 'Go Digital',
-    desc: 'Warkop Galuh kini hadir secara online. Pelanggan bisa lihat menu, pesan, dan bayar via QRIS — semuanya dari genggaman tangan.',
+    title: 'Pesan Online & QRIS',
+    desc: 'Menyediakan katalog menu dan form pesanan di web, lengkap dengan pembayaran QRIS.',
   },
 ];
 
 const VALUES = [
   {
     icon: Heart,
-    title: 'Kebersamaan',
-    desc: 'Kami percaya bahwa secangkir kopi terbaik dinikmati bersama orang-orang yang peduli satu sama lain.',
+    title: 'Santai & Terbuka',
+    desc: 'Tempat ngobrol santai tanpa sekat. Mau datang sendiri atau bareng teman, bebas duduk di mana saja.',
   },
   {
     icon: Star,
-    title: 'Kualitas Pas',
-    desc: 'Bukan yang paling mahal, tapi selalu tepat rasa. Kopi, mie, dan minuman kami disajikan dengan takaran konsisten setiap hari.',
+    title: 'Rasa Konsisten',
+    desc: 'Takaran kopi dan racikan mie dijaga sama setiap hari dengan harga yang ramah di kantong.',
   },
   {
     icon: Users,
-    title: 'Melayani Semua',
-    desc: 'Dari pelajar hingga bapak-bapak RT, semua disambut hangat tanpa beda. Warkop adalah ruang untuk semua.',
+    title: 'Terbuka untuk Semua',
+    desc: 'Warga sekitar, pekerja kantor, maupun mahasiswa dipersilakan mampir istirahat.',
   },
 ];
 
@@ -62,21 +62,19 @@ export default function TentangPage() {
       <section className="space-y-6">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-stone-200 text-xs font-semibold text-stone-700">
           <Coffee className="w-3.5 h-3.5 text-stone-600" />
-          <span>Cerita Kami</span>
+          <span>Tentang Kami</span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <div className="space-y-5">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-stone-900 tracking-tight leading-[1.15] font-display">
-              Tentang Warkop Galuh
+              Warkop Galuh di Cipinang Muara
             </h1>
             <p className="text-stone-600 text-sm sm:text-base leading-relaxed">
-              Warkop Galuh lahir dari semangat sederhana — menjadi tempat berkumpul yang hangat, merakyat,
-              dan terjangkau untuk warga sekitar Cipinang Muara 2, Jatinegara, Jakarta Timur.
+              Warkop Galuh berlokasi di Jl. Cipinang Muara 2, Jatinegara, Jakarta Timur. Kami menyediakan kopi seduh panas, minuman dingin, dan Indomie hangat dengan suasana santai sampai tengah malam.
             </p>
             <p className="text-stone-500 text-sm leading-relaxed">
-              Bukan kafe mewah dengan menu aneh-aneh. Kami hanya warung kopi yang jujur: kopi enak,
-              mie hangat, dan suasana yang bikin betah sampai tengah malam.
+              Tersedia fasilitas WiFi gratis, colokan di tiap meja, dan area parkir motor tepat di depan warung.
             </p>
 
             <div className="flex flex-wrap gap-3 pt-2">
@@ -85,14 +83,14 @@ export default function TentangPage() {
                 className="px-4 py-2.5 rounded-lg bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold inline-flex items-center gap-2 transition-colors"
               >
                 <Coffee className="w-3.5 h-3.5" />
-                <span>Lihat Menu Kami</span>
+                <span>Lihat Menu</span>
               </Link>
               <Link
                 href="/lokasi"
                 className="px-4 py-2.5 rounded-lg bg-white hover:bg-stone-100 text-stone-900 text-xs font-semibold border border-stone-300 inline-flex items-center gap-2 transition-colors"
               >
                 <MapPin className="w-3.5 h-3.5" />
-                <span>Temukan Lokasi</span>
+                <span>Petunjuk Lokasi</span>
               </Link>
             </div>
           </div>
@@ -101,9 +99,9 @@ export default function TentangPage() {
           <div className="grid grid-cols-2 gap-4">
             {[
               { label: 'Tahun Berdiri', value: '2018', sub: 'Cipinang Muara' },
-              { label: 'Jam Buka', value: '15+', sub: 'Jam per hari' },
-              { label: 'Menu Tersedia', value: '13+', sub: 'Pilihan minuman & makanan' },
-              { label: 'Buka', value: '7/7', sub: 'Hari, termasuk libur' },
+              { label: 'Jam Buka', value: '15 Jam', sub: '09.00 – 00.00 WIB' },
+              { label: 'Katalog Menu', value: '13+ Menu', sub: 'Kopi, mie, & minuman' },
+              { label: 'Operasional', value: 'Tiap Hari', sub: 'Termasuk hari libur' },
             ].map((stat) => (
               <div
                 key={stat.label}
@@ -124,10 +122,10 @@ export default function TentangPage() {
       <section className="space-y-6">
         <div className="text-center space-y-2 max-w-xl mx-auto">
           <span className="text-[11px] font-mono tracking-wider uppercase text-stone-500 block">
-            Nilai Kami
+            Prinsip Kami
           </span>
           <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
-            Apa yang Kami Percaya
+            Yang Kami Jaga
           </h2>
         </div>
 
@@ -154,10 +152,10 @@ export default function TentangPage() {
       <section className="space-y-6">
         <div className="space-y-2">
           <span className="text-[11px] font-mono tracking-wider uppercase text-stone-500 block">
-            Perjalanan Kami
+            Perjalanan
           </span>
           <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
-            Dari Warung Sederhana ke Warkop Digital
+            Perjalanan Warkop Galuh
           </h2>
         </div>
 
@@ -191,16 +189,16 @@ export default function TentangPage() {
             Fasilitas
           </span>
           <h2 className="text-xl sm:text-2xl font-bold text-stone-900 font-display">
-            Kenapa Nyaman di Sini?
+            Fasilitas di Warkop
           </h2>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
           {[
-            { icon: Wifi, label: 'WiFi Kencang', sub: 'Gratis tanpa limit' },
+            { icon: Wifi, label: 'WiFi Gratis', sub: 'Tersedia untuk pengunjung' },
             { icon: Zap, label: 'Colokan Listrik', sub: 'Di setiap meja' },
-            { icon: MapPin, label: 'Parkir Motor', sub: 'Tersedia di depan' },
-            { icon: Clock, label: 'Buka Sampai Malam', sub: '09.00 – 00.00 WIB' },
+            { icon: MapPin, label: 'Parkir Motor', sub: 'Tepat di depan warung' },
+            { icon: Clock, label: 'Buka Tiap Hari', sub: '09.00 – 00.00 WIB' },
           ].map((f) => {
             const Icon = f.icon;
             return (
@@ -223,11 +221,10 @@ export default function TentangPage() {
       <section className="rounded-2xl bg-stone-900 text-white p-8 sm:p-12 text-center space-y-5">
         <Coffee className="w-8 h-8 mx-auto text-stone-400" />
         <h2 className="text-xl sm:text-2xl font-bold font-display">
-          Yuk, Mampir ke Warkop Galuh!
+          Mampir ke Warkop Galuh
         </h2>
         <p className="text-stone-400 text-sm max-w-md mx-auto leading-relaxed">
-          Pesan sekarang lewat website atau datang langsung. Kami selalu siap menyambut dengan
-          kopi hangat dan suasana santai.
+          Pesan lewat website atau langsung datang ke warkop. Buka setiap hari dari jam 9 pagi sampai tengah malam.
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link
@@ -235,14 +232,14 @@ export default function TentangPage() {
             className="px-5 py-2.5 rounded-lg bg-white hover:bg-stone-100 text-stone-900 font-semibold text-sm inline-flex items-center gap-2 transition-colors"
           >
             <ShoppingBag className="w-4 h-4" />
-            <span>Pesan Sekarang</span>
+            <span>Pesan Online</span>
           </Link>
           <Link
             href="/lokasi"
             className="px-5 py-2.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-white font-semibold text-sm inline-flex items-center gap-2 transition-colors border border-stone-700"
           >
             <ArrowRight className="w-4 h-4" />
-            <span>Lihat Lokasi</span>
+            <span>Petunjuk Lokasi</span>
           </Link>
         </div>
       </section>

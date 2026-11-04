@@ -45,13 +45,13 @@ export default function MenuPage() {
       {/* Header Banner */}
       <div className="space-y-2">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-stone-200 text-xs font-semibold text-stone-700">
-          <span>Daftar Menu & Harga Resmi</span>
+          <span>Daftar Menu & Harga</span>
         </div>
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-stone-900 font-display tracking-tight">
-          Daftar Menu Warkop Galuh
+          Menu Warkop Galuh
         </h1>
         <p className="text-stone-600 text-xs sm:text-sm max-w-xl">
-          Pilihan lengkap seduhan kopi panas & dingin, Indomie kuah atau goreng, dan aneka minuman sachet segar.
+          Kopi seduh, Indomie kuah atau goreng, dan aneka minuman sachet dingin.
         </p>
       </div>
 
@@ -98,45 +98,52 @@ export default function MenuPage() {
         </div>
       </div>
 
-      {/* Menu Grid Content */}
+      {/* Menu Cards Grid */}
       {filteredMenus.length === 0 ? (
-        <div className="py-16 text-center space-y-3 rounded-xl bg-white border border-stone-200 p-6 shadow-xs">
-          <p className="text-sm text-stone-900 font-bold">Menu tidak ditemukan</p>
-          <p className="text-xs text-stone-500 max-w-sm mx-auto">
-            Tidak ada menu yang sesuai dengan kata kunci &quot;{searchQuery}&quot;.
+        <div className="text-center py-16 bg-white rounded-xl border border-stone-200 p-8 space-y-3">
+          <p className="text-sm font-semibold text-stone-900">
+            Menu tidak ditemukan
           </p>
-          <div className="pt-1">
-            <button
-              onClick={() => {
-                setSearchQuery('');
-                setSelectedCategory('Semua');
-              }}
-              className="px-4 py-2 rounded-lg bg-stone-900 text-white text-xs font-semibold hover:bg-stone-800 transition-colors"
-            >
-              Tampilkan Semua Menu
-            </button>
-          </div>
+          <p className="text-xs text-stone-500">
+            Coba kata kunci lain atau pilih kategori &quot;Semua Menu&quot;.
+          </p>
+          <button
+            onClick={() => {
+              setSelectedCategory('Semua');
+              setSearchQuery('');
+            }}
+            className="text-xs font-semibold text-stone-900 underline"
+          >
+            Reset Pencarian
+          </button>
         </div>
       ) : (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between text-xs text-stone-500 px-1">
-            <span>Menampilkan <strong className="text-stone-900 font-semibold">{filteredMenus.length}</strong> menu</span>
-            <Link
-              href="/pesan"
-              className="text-stone-900 hover:text-stone-600 font-semibold inline-flex items-center gap-1.5"
-            >
-              <ShoppingBag className="w-3.5 h-3.5" />
-              <span>Buat Pesanan Online</span>
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {filteredMenus.map((item) => (
-              <MenuCard key={item.id || item._id} menu={item} />
-            ))}
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredMenus.map((menu) => (
+            <MenuCard key={menu._id || menu.id} menu={menu} />
+          ))}
         </div>
       )}
+
+      {/* Floating Cart / Fast Order Bottom Banner */}
+      <div className="rounded-xl border border-stone-200 bg-white p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+        <div>
+          <h2 className="text-sm font-bold text-stone-900">
+            Mau pesan sekarang?
+          </h2>
+          <p className="text-xs text-stone-500 mt-0.5">
+            Bisa pesan langsung lewat website atau datang ke warkop.
+          </p>
+        </div>
+        <Link
+          href="/pesan"
+          className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-stone-900 hover:bg-stone-800 text-white font-semibold text-xs transition-colors shadow-xs flex items-center justify-center gap-2"
+        >
+          <ShoppingBag className="w-3.5 h-3.5" />
+          <span>Buka Form Pesanan</span>
+        </Link>
+      </div>
+
     </div>
   );
 }

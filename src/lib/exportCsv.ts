@@ -1,12 +1,15 @@
 import { IPesanan } from '@/types';
 
 /**
- * Converts a list of pesanan to a CSV string and triggers a file download in the browser.
+ * Ekspor data pesanan ke file CSV / Excel kompatibel (.csv dengan UTF-8 BOM dan baris ringkasan)
  */
-export function exportPesananToCsv(data: IPesanan[], filenamePrefix = 'pesanan-warkop') {
-  if (data.length === 0) return;
+export function exportPesananToCsv(
+  data: IPesanan[],
+  filenamePrefix = 'laporan-transaksi-warkop'
+) {
+  if (!data || data.length === 0) return;
 
-  const formatRupiah = (num: number) => `Rp ${num.toLocaleString('id-ID')}`;
+  const formatRupiah = (num: number) => `Rp ${Number(num || 0).toLocaleString('id-ID')}`;
 
   const formatDate = (d?: string | Date) => {
     if (!d) return '-';
@@ -22,62 +25,110 @@ export function exportPesananToCsv(data: IPesanan[], filenamePrefix = 'pesanan-w
   const STATUS_LABEL: Record<string, string> = {
     pending: 'Menunggu',
     diproses: 'Diproses',
-    selesai: 'Selesai',
+    selesai: 'Selesai (Lunas)',
     dibatalkan: 'Dibatalkan',
   };
 
-  // Header row
+  // 1. Kolom Header
   const headers = [
     'No. Pesanan',
+    'Waktu Transaksi',
     'Nama Pemesan',
-    'No. HP',
-    'Menu (nama x qty)',
-    'Total Harga',
-    'Status',
-    'Catatan',
-    'Waktu Pesan',
+    'No. WhatsApp / HP',
+    'Daftar Menu & Qty',
+    'Total Porsi/Item',
+    'Metode Pembayaran',
+    'Total Transaksi',
+    'Status Pesanan',
+    'Catatan Khusus',
   ];
 
-  // Data rows
+  // 2. Baris Data Transaksi
+  let totalItemTerjual = 0;
+  let totalOmsetSelesai = 0;
+  let totalOmsetSemua = 0;
+  let totalQRIS = 0;
+  let countQRIS = 0;
+  let totalTunai = 0;
+  let countTunai = 0;
+
   const rows = data.map((p) => {
     const orderId = `#${(p._id || '').slice(-6).toUpperCase()}`;
-    const menuStr = p.menu
-      .map((item) => `${item.nama} x${item.jumlah}`)
-      .join(' | ');
+    const totalPorsi = (p.menu || []).reduce((acc, curr) => acc + (curr.jumlah || 1), 0);
+    totalItemTerjual += totalPorsi;
+
+    const harga = Number(p.totalHarga || 0);
+    totalOmsetSemua += harga;
+
+    if (p.status === 'selesai') {
+      totalOmsetSelesai += harga;
+    }
+
+    const metode = p.metodePembayaran || 'QRIS';
+    if (metode === 'QRIS') {
+      countQRIS++;
+      if (p.status === 'selesai') totalQRIS += harga;
+    } else {
+      countTunai++;
+      if (p.status === 'selesai') totalTunai += harga;
+    }
+
+    const menuStr = (p.menu || [])
+      .map((item) => `${item.nama} (${item.jumlah}x)`)
+      .join('; ');
     const catatan = p.catatan && p.catatan !== 'tidak ada catatan' ? p.catatan : '-';
 
     return [
       orderId,
+      formatDate(p.createdAt),
       p.nama,
       p.noHP,
       menuStr,
-      formatRupiah(p.totalHarga),
+      totalPorsi.toString(),
+      metode,
+      formatRupiah(harga),
       STATUS_LABEL[p.status] ?? p.status,
       catatan,
-      formatDate(p.createdAt),
     ];
   });
 
-  const escapeCsvCell = (value: string) => {
-    const str = String(value);
-    // Wrap in quotes if contains comma, newline, or quote
-    if (str.includes(',') || str.includes('\n') || str.includes('"')) {
+  // 3. Baris Ringkasan Rekap Keuangan di Bagian Bawah
+  const separator = ['', '', '', '', '', '', '', '', '', ''];
+  const summaryHeader = ['--- RINGKASAN LAPORAN KEUANGAN & TRANSAKSI ---', '', '', '', '', '', '', '', '', ''];
+  const summaryRows = [
+    separator,
+    summaryHeader,
+    ['Total Pesanan Masuk', `${data.length} transaksi`, '', '', '', '', '', '', '', ''],
+    ['Total Item/Porsi Terjual', `${totalItemTerjual} item`, '', '', '', '', '', '', '', ''],
+    ['Total Omset Pesanan Selesai (Lunas)', formatRupiah(totalOmsetSelesai), '', '', '', '', '', '', '', ''],
+    ['Total Nominal Seluruh Pesanan', formatRupiah(totalOmsetSemua), '', '', '', '', '', '', '', ''],
+    ['Pembayaran via QRIS (Selesai)', `${formatRupiah(totalQRIS)} (${countQRIS} transaksi)`, '', '', '', '', '', '', '', ''],
+    ['Pembayaran via Tunai (Selesai)', `${formatRupiah(totalTunai)} (${countTunai} transaksi)`, '', '', '', '', '', '', '', ''],
+    ['Waktu Ekspor Laporan', formatDate(new Date()), '', '', '', '', '', '', '', ''],
+  ];
+
+  const escapeCsvCell = (value: string | number) => {
+    const str = String(value ?? '');
+    // Wrap in quotes if contains comma, newline, semicolon, or quote
+    if (str.includes(',') || str.includes(';') || str.includes('\n') || str.includes('"')) {
       return `"${str.replace(/"/g, '""')}"`;
     }
     return str;
   };
 
   const csvContent =
-    '\uFEFF' + // BOM for Excel UTF-8 compatibility
-    [headers, ...rows]
+    '\uFEFF' + // UTF-8 BOM untuk Microsoft Excel agar terbaca rapi otomatis
+    [headers, ...rows, ...summaryRows]
       .map((row) => row.map(escapeCsvCell).join(','))
-      .join('\n');
+      .join('\r\n');
 
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
 
-  const today = new Date().toISOString().slice(0, 10);
-  const filename = `${filenamePrefix}-${today}.csv`;
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0, 10);
+  const timeStr = `${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
+  const filename = `${filenamePrefix}-${dateStr}_${timeStr}.csv`;
 
   const link = document.createElement('a');
   link.href = url;
