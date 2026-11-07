@@ -4,7 +4,7 @@ import React, { useState, Suspense } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Coffee, Lock, Mail, ArrowLeft, Loader2, Sparkles } from 'lucide-react';
+import { Coffee, Lock, Mail, ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 function AdminLoginForm() {
@@ -16,15 +16,24 @@ function AdminLoginForm() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleAutoFill = () => {
-    setEmail('admin@warkop.com');
-    setPassword('adminwarkop123');
-    toast.info('Akun admin default telah diisi otomatis');
-  };
+  // Refs untuk membaca nilai input langsung (menghindari timing issues)
+  const emailInputRef = React.useRef<HTMLInputElement>(null);
+  const passwordInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
+
+    // Baca nilai langsung dari input refs (tidak bergantung pada state timing)
+    const emailValue = emailInputRef.current?.value.trim() || '';
+    const passwordValue = passwordInputRef.current?.value.trim() || '';
+
+    // Debug: lihat nilai yang dikirim
+    console.log('[DEBUG LOGIN] Email from ref:', emailValue);
+    console.log('[DEBUG LOGIN] Password from ref:', passwordValue);
+    console.log('[DEBUG LOGIN] State email:', email);
+    console.log('[DEBUG LOGIN] State password:', password);
+
+    if (!emailValue || !passwordValue) {
       toast.error('Email dan password wajib diisi');
       return;
     }
@@ -33,8 +42,8 @@ function AdminLoginForm() {
       setLoading(true);
       const res = await signIn('credentials', {
         redirect: false,
-        email: email.trim(),
-        password: password.trim(),
+        email: emailValue,
+        password: passwordValue,
         callbackUrl,
       });
 
@@ -79,22 +88,6 @@ function AdminLoginForm() {
             </p>
           </div>
 
-          {/* Quick Autofill Helper */}
-          <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs flex items-center justify-between">
-            <div>
-              <p className="font-semibold text-stone-800 text-[11px]">Akun Default Warkop:</p>
-              <p className="text-stone-500 text-[10px] font-mono">admin@warkop.com / adminwarkop123</p>
-            </div>
-            <button
-              type="button"
-              onClick={handleAutoFill}
-              className="px-2.5 py-1.5 rounded-lg bg-white border border-stone-300 hover:border-stone-400 text-stone-800 text-[11px] font-semibold flex items-center gap-1 shadow-2xs transition-colors"
-            >
-              <Sparkles className="w-3 h-3 text-amber-500" />
-              <span>Isi Otomatis</span>
-            </button>
-          </div>
-
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1">
@@ -104,6 +97,7 @@ function AdminLoginForm() {
               <div className="relative">
                 <Mail className="w-4 h-4 text-[#A8A29E] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
+                  ref={emailInputRef}
                   type="email"
                   required
                   value={email}
@@ -121,6 +115,7 @@ function AdminLoginForm() {
               <div className="relative">
                 <Lock className="w-4 h-4 text-[#A8A29E] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
+                  ref={passwordInputRef}
                   type="password"
                   required
                   value={password}

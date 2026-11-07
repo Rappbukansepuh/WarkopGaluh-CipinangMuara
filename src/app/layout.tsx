@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 import './globals.css';
 import AuthProvider from '@/components/providers/AuthProvider';
 import { Toaster } from 'sonner';
@@ -25,29 +26,25 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const fs = require('fs');
-    if (!fs.existsSync('crop_v2_done.flag')) {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const cp = require('child_process');
-      try {
-        cp.execSync('python crop_icon.py > crop_output.txt 2>&1', { shell: 'cmd.exe', timeout: 35000 });
-        fs.writeFileSync('crop_v2_done.flag', 'done');
-      } catch (err) {
-        try {
-          cp.execSync('py crop_icon.py > crop_output.txt 2>&1', { shell: 'cmd.exe', timeout: 35000 });
-          fs.writeFileSync('crop_v2_done.flag', 'done');
-        } catch (e) {
-          fs.writeFileSync('crop_output.txt', String(err) + '\n' + String(e));
-        }
-      }
-    }
-  } catch {}
+  // CATATAN: Logika eksekusi Python 'crop_icon.py' dan modul 'fs' / 'child_process' 
+  // SUDAH DIHAPUS dari sini karena menyebabkan efek samping (side-effect) berbahaya 
+  // saat komponen di-render oleh Next.js.
 
   return (
     <html lang="id" className="scroll-smooth">
       <body className="antialiased min-h-screen bg-[#FAF8F5] text-[#1C1917] selection:bg-stone-900 selection:text-white">
+        <Script
+          src="https://www.googletagmanager.com/gtm.js?id=GTM-W5TLJFC2"
+          strategy="afterInteractive"
+        />
+        <Script id="google-tag-manager" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'GTM-W5TLJFC2');
+          `}
+        </Script>
         <AuthProvider>
           {children}
           <Toaster 
