@@ -3,15 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  Coffee, 
-  Menu as MenuIcon, 
-  X, 
-  Clock, 
-  ShoppingBag, 
-  MapPin, 
-  UtensilsCrossed, 
-  Home, 
+import {
+  Coffee,
+  Menu as MenuIcon,
+  X,
+  Clock,
+  ShoppingBag,
+  MapPin,
+  UtensilsCrossed,
+  Home,
   Phone,
   ShieldCheck,
   ClipboardList,
